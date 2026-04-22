@@ -1,48 +1,21 @@
-@custom-variant dark (&:is(.dark *));
+/* KEEP_IN_SYNC(fullscreen/resources/figmake/shadcn/globals.css) */
 
 :root {
   --font-size: 16px;
-  
-  /* Paleta Memoria Viva - Tonos Cálidos/Tierra */
-  --color-cream-lightest: #f6e5cf;
-  --color-cream-light: #e0c49f;
-  --color-sand: #d2a060;
-  --color-ochre: #b3782e;
-  --color-brown-dark: #683e07;
-
-  /* Paleta MaxiLibro */
-  --color-maxilibro-bg: #f2e8dc;
-  --color-maxilibro-text: #4a3428;
-  --color-maxilibro-text-secondary: #6d5347;
-
-  /* Paleta Memoria Viva - Tonos Fríos/Contraste */
-  --color-teal-light: #80a4a8;
-  --color-teal: #4e7378;
-  --color-teal-dark: #28555a;
-  --color-petrol: #163d41;
-  --color-almost-black: #0a1d1f;
-
-  /* Paleta Memoria Viva - Tonos Acento/Terracota */
-  --color-peach-light: #e9d1c2;
-  --color-salmon: #ddb198;
-  --color-coral: #e07a5f;
-  --color-terracotta: #ba4f33;
-  --color-brick-dark: #802c16;
-
-  --background: var(--color-maxilibro-bg);
-  --foreground: var(--color-almost-black);
+  --background: #ffffff;
+  --foreground: oklch(0.145 0 0);
   --card: #ffffff;
-  --card-foreground: var(--color-almost-black);
+  --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: var(--color-almost-black);
-  --primary: var(--color-teal-dark);
-  --primary-foreground: var(--color-cream-lightest);
-  --secondary: var(--color-sand);
-  --secondary-foreground: var(--color-almost-black);
-  --muted: var(--color-cream-light);
-  --muted-foreground: var(--color-petrol);
-  --accent: var(--color-coral);
-  --accent-foreground: var(--color-cream-lightest);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.1);
@@ -144,93 +117,4 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
-  /* Colores personalizados Memoria Viva */
-  --color-cream-lightest: #f6e5cf;
-  --color-cream-light: #e0c49f;
-  --color-sand: #d2a060;
-  --color-ochre: #b3782e;
-  --color-brown-dark: #683e07;
-  --color-maxilibro-bg: #f2e8dc;
-  --color-maxilibro-text: #4a3428;
-  --color-maxilibro-text-secondary: #6d5347;
-  --color-teal-light: #80a4a8;
-  --color-teal: #4e7378;
-  --color-teal-dark: #28555a;
-  --color-petrol: #163d41;
-  --color-almost-black: #0a1d1f;
-  --color-peach-light: #e9d1c2;
-  --color-salmon: #ddb198;
-  --color-coral: #e07a5f;
-  --color-terracotta: #ba4f33;
-  --color-brick-dark: #802c16;
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
-
-  /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
-
-  html {
-    font-size: var(--font-size);
-  }
-
-  h1 {
-    font-size: var(--text-2xl);
-    font-weight: 700;
-    line-height: 1.5;
-    font-family: 'Fraunces', serif;
-  }
-
-  h2 {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    line-height: 1.5;
-    font-family: 'Fraunces', serif;
-  }
-
-  h3 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    line-height: 1.5;
-    font-family: 'Fraunces', serif;
-  }
-
-  h4 {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  label {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-medium);
-    line-height: 1.5;
-  }
-
-  button {
-    font-size: var(--text-base);
-    font-weight: 700;
-    line-height: 1.5;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-  }
-
-  input {
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.5;
-  }
-  
-  p {
-    font-family: 'Commissioner', sans-serif;
-  }
 }

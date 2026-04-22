@@ -126,7 +126,7 @@ export default function Cabina() {
   };
 
   return (
-    <div className="bg-[#f6e5cf] py-12 px-8">
+    <div className="bg-[#f2e8dc] py-12 px-8">
       <div className="max-w-4xl mx-auto">
         {/* Title */}
         <div className="text-center mb-8">
@@ -146,7 +146,7 @@ export default function Cabina() {
 
         {/* Recording Interface */}
         <motion.div 
-          className="bg-[#f6e5cf] rounded-2xl shadow-xl p-12 mb-6"
+          className="bg-[#f2e8dc] rounded-2xl shadow-xl p-12 mb-6"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}

@@ -60,7 +60,7 @@ export default function StoryDetail() {
 
   if (loading) {
     return (
-      <div className="bg-[#f6e5cf] min-h-screen flex items-center justify-center">
+      <div className="bg-[#f2e8dc] min-h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 size={64} className="animate-spin text-[#28555a] mx-auto mb-4" />
           <p className="text-lg text-[#5d5d5d]" style={{ fontFamily: 'Bricolage Grotesque, sans-serif' }}>
@@ -73,7 +73,7 @@ export default function StoryDetail() {
 
   if (!story) {
     return (
-      <div className="bg-[#f6e5cf] min-h-screen flex items-center justify-center px-4">
+      <div className="bg-[#f2e8dc] min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6 text-[#212121]" style={{ fontFamily: 'Fraunces, serif', fontVariationSettings: "'SOFT' 0, 'WONK' 1" }}>
             Historia no encontrada
@@ -92,7 +92,7 @@ export default function StoryDetail() {
   }
 
   return (
-    <div className="bg-[#f6e5cf] min-h-screen px-8 py-12">
+    <div className="bg-[#f2e8dc] min-h-screen px-8 py-12">
       <div className="max-w-4xl mx-auto">
         {/* Back Button */}
         <motion.div
@@ -177,7 +177,7 @@ export default function StoryDetail() {
             <div className="flex items-center gap-4">
               <motion.button
                 onClick={togglePlayPause}
-                className="w-16 h-16 bg-white hover:bg-[#f6e5cf] rounded-full flex items-center justify-center transition-colors shadow-lg flex-shrink-0"
+                className="w-16 h-16 bg-white hover:bg-[#f2e8dc] rounded-full flex items-center justify-center transition-colors shadow-lg flex-shrink-0"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >

@@ -8,7 +8,7 @@ export default function Root() {
   const isMaxiLibro = location.pathname === "/maxilibro";
 
   return (
-    <div className="min-h-screen bg-[#f6e5cf]">
+    <div className="min-h-screen bg-[#f2e8dc]">
       {/* Header */}
       <motion.header
         className="bg-[#28555a] py-6 px-8 shadow-lg"
@@ -33,7 +33,7 @@ export default function Root() {
           </Link>
 
           {/* Navigation */}
-          <nav className="bg-[#f6e5cf] rounded-full p-2 flex gap-3">
+          <nav className="bg-[#f2e8dc] rounded-full p-2 flex gap-3">
             <Link
               to="/"
               className={`flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-colors ${

@@ -59,36 +59,53 @@ app.post("/make-server-8c79cdcb/upload-story", async (c) => {
       return c.json({ error: 'No se proporcionó archivo de audio' }, 400);
     }
 
-    // Read Gemini API key from environment
-    const geminiKey = Deno.env.get('GEMINI_API_KEY');
-    if (!geminiKey) {
-      return c.json({ error: 'Gemini API key no configurada' }, 500);
+    // Read OpenAI API key from environment
+    const openaiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openaiKey) {
+      return c.json({ error: 'OpenAI API key no configurada' }, 500);
     }
 
-    // Convert audio file to base64 (safe for large files)
+    // Convert audio to ArrayBuffer (needed for storage later)
     const audioBytes = await audioFile.arrayBuffer();
-    
-    // Convert ArrayBuffer to base64 using chunks to avoid stack overflow
-    const uint8Array = new Uint8Array(audioBytes);
-    let binary = '';
-    const chunkSize = 0x8000; // Process 32KB at a time
-    for (let i = 0; i < uint8Array.length; i += chunkSize) {
-      const chunk = uint8Array.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, Array.from(chunk));
+
+    // Step 1: Transcribe audio using Whisper
+    console.log('Transcribiendo audio con Whisper...');
+
+    const whisperFormData = new FormData();
+    whisperFormData.append('file', audioFile);
+    whisperFormData.append('model', 'whisper-1');
+    whisperFormData.append('language', 'es');
+
+    const whisperResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openaiKey}`,
+      },
+      body: whisperFormData,
+    });
+
+    if (!whisperResponse.ok) {
+      const error = await whisperResponse.text();
+      console.error('Error en Whisper API:', error);
+      return c.json({ error: 'Error al transcribir el audio' }, 500);
     }
-    const audioBase64 = btoa(binary);
 
-    // Step 1: Transcribe and analyze audio using Gemini 1.5 Flash
-    console.log('Transcribiendo y analizando audio con Gemini...');
+    const whisperData = await whisperResponse.json();
+    const transcripcion = whisperData.text;
+
+    console.log('Transcripción obtenida, procesando con GPT...');
     
-    const systemPrompt = `Eres el moderador y editor de un proyecto cultural llamado 'Cartografía de Memorias'. Tu tarea es:
+    // Step 2: Analyze and moderate using GPT-4
+    const systemPrompt = `Eres el moderador y editor de un proyecto cultural llamado 'Chismógrafo'. Tu tarea es:
 
-1. TRANSCRIBIR el audio en español
-2. FILTRO DE SEGURIDAD: Analiza el texto en busca de lenguaje de odio explícito, amenazas, discriminación grave o groserías extremadamente ofensivas. Si la historia viola estas reglas, debes rechazarla. (Nota: Las groserías coloquiales o regionales que sean parte natural de la forma de hablar se pueden permitir si no son un ataque directo a alguien).
-3. RESUMEN ESTILO 'CHISME' Y TITULACIÓN: Si la historia es aprobada, debes generar:
+1. FILTRO DE SEGURIDAD: Analiza el texto en busca de lenguaje de odio explícito, amenazas, discriminación grave o groserías extremadamente ofensivas. Si la historia viola estas reglas, debes rechazarla. (Nota: Las groserías coloquiales o regionales que sean parte natural de la forma de hablar se pueden permitir si no son un ataque directo a alguien).
+
+2. RESUMEN ESTILO 'CHISME' Y TITULACIÓN: Si la historia es aprobada, debes generar:
    - Un Título Intrigante (Máximo 6 palabras) que suene como el titular de un chisme jugoso.
    - Un Resumen Estilo 'Chisme' (Máximo 3 oraciones). NO hagas un resumen técnico ni aburrido. Redáctalo como si le estuvieras contando un secreto fascinante a un amigo al oído. Usa un tono coloquial, intrigante y muy narrativo. Comienza con frases como 'Imagínate que...', 'Resulta que...', 'Cuentan por ahí que...' o 'No vas a creer que...'.
    - Un par de Palabras Clave/Etiquetas (Ej: Romance, Nostalgia, Chisme de barrio).
+
+3. CORRECCIÓN: Corrige errores menores de puntuación en la transcripción.
 
 Devuelve tu respuesta ÚNICAMENTE en el siguiente formato JSON estricto:
 {
@@ -97,67 +114,45 @@ Devuelve tu respuesta ÚNICAMENTE en el siguiente formato JSON estricto:
   "titulo": "El título generado",
   "resumen": "El resumen breve",
   "etiquetas": ["etiqueta1", "etiqueta2"],
-  "transcripcion_limpia": "La transcripción completa del audio (corrige errores menores de puntuación)"
+  "transcripcion_limpia": "La transcripción completa con correcciones menores"
 }`;
 
-    const geminiResponse = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite-preview:generateContent?key=${geminiKey}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                { text: systemPrompt },
-                {
-                  inline_data: {
-                    mime_type: audioFile.type || 'audio/webm',
-                    data: audioBase64,
-                  },
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.4,
-            topK: 32,
-            topP: 1,
-            maxOutputTokens: 2048,
-            responseMimeType: 'application/json',
-          },
-        }),
-      }
-    );
+    const gptResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${openaiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Analiza esta transcripción:\n\n${transcripcion}` },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.7,
+      }),
+    });
 
-    if (!geminiResponse.ok) {
-      const error = await geminiResponse.text();
-      console.error('Error en Gemini API:', error);
-      return c.json({ error: 'Error al procesar el audio con Gemini' }, 500);
+    if (!gptResponse.ok) {
+      const error = await gptResponse.text();
+      console.error('Error en GPT API:', error);
+      return c.json({ error: 'Error al analizar el contenido' }, 500);
     }
 
-    const geminiData = await geminiResponse.json();
-    
-    // Extract the text response from Gemini's structure
-    if (!geminiData.candidates || !geminiData.candidates[0]?.content?.parts?.[0]?.text) {
-      console.error('Respuesta inesperada de Gemini:', geminiData);
-      return c.json({ error: 'Respuesta inesperada de Gemini' }, 500);
-    }
+    const gptData = await gptResponse.json();
+    const analysis = JSON.parse(gptData.choices[0].message.content);
 
-    const analysis = JSON.parse(geminiData.candidates[0].content.parts[0].text);
-
-    // Step 2: Handle rejection or approval
+    // Step 3: Handle rejection or approval
     if (!analysis.aprobado) {
-      console.log('Historia rechazada:', analysis.motivo_rechazo);
+      console.log('Chisme rechazado:', analysis.motivo_rechazo);
       return c.json({
-        aprobado: false,
-        motivo_rechazo: analysis.motivo_rechazo,
+        approved: false,
+        rejection_reason: analysis.motivo_rechazo,
       });
     }
 
-    // Step 3: Save audio to Supabase Storage
+    // Step 4: Save audio to Supabase Storage
     console.log('Guardando audio en storage...');
     const fileName = `${Date.now()}-${crypto.randomUUID()}.webm`;
     
@@ -177,7 +172,7 @@ Devuelve tu respuesta ÚNICAMENTE en el siguiente formato JSON estricto:
       .from(BUCKET_NAME)
       .createSignedUrl(fileName, 31536000);
 
-    // Step 4: Save to database
+    // Step 5: Save to database
     const storyId = crypto.randomUUID();
     const storyData = {
       id: storyId,
@@ -192,10 +187,10 @@ Devuelve tu respuesta ÚNICAMENTE en el siguiente formato JSON estricto:
 
     await kv.set(`story:${storyId}`, storyData);
 
-    console.log('Historia guardada exitosamente:', storyId);
+    console.log('Chisme guardado exitosamente:', storyId);
     return c.json({
-      aprobado: true,
-      historia: storyData,
+      approved: true,
+      story: storyData,
     });
 
   } catch (error) {
