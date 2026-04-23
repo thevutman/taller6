@@ -3,49 +3,37 @@
 :root {
   --font-size: 16px;
   
-  /* Paleta Memoria Viva - Tonos Cálidos/Tierra */
-  --color-cream-lightest: #f6e5cf;
-  --color-cream-light: #e0c49f;
-  --color-sand: #d2a060;
-  --color-ochre: #b3782e;
-  --color-brown-dark: #683e07;
-
-  /* Paleta MaxiLibro */
-  --color-maxilibro-bg: #f2e8dc;
-  --color-maxilibro-text: #4a3428;
-  --color-maxilibro-text-secondary: #6d5347;
-
-  /* Paleta Memoria Viva - Tonos Fríos/Contraste */
-  --color-teal-light: #80a4a8;
-  --color-teal: #4e7378;
-  --color-teal-dark: #28555a;
-  --color-petrol: #163d41;
-  --color-almost-black: #0a1d1f;
-
-  /* Paleta Memoria Viva - Tonos Acento/Terracota */
-  --color-peach-light: #e9d1c2;
-  --color-salmon: #ddb198;
-  --color-coral: #e07a5f;
-  --color-terracotta: #ba4f33;
-  --color-brick-dark: #802c16;
-
-  --background: var(--color-maxilibro-bg);
-  --foreground: var(--color-almost-black);
+  /* Colores culturales y naturales - Matronas de Santa Fe */
+  --terracota: #d4654f;
+  --terracota-dark: #a84732;
+  --terracota-light: #e89a88;
+  --verde-salvia: #8b9d83;
+  --verde-salvia-dark: #677a5f;
+  --verde-salvia-light: #a8b9a1;
+  --ocre: #d9a679;
+  --ocre-dark: #b8875a;
+  --beige: #f2e8dc;
+  --crema: #faf6f0;
+  --tierra: #4a3428;
+  --tierra-light: #6d5347;
+  
+  --background: #faf6f0;
+  --foreground: #4a3428;
   --card: #ffffff;
-  --card-foreground: var(--color-almost-black);
+  --card-foreground: #4a3428;
   --popover: oklch(1 0 0);
-  --popover-foreground: var(--color-almost-black);
-  --primary: var(--color-teal-dark);
-  --primary-foreground: var(--color-cream-lightest);
-  --secondary: var(--color-sand);
-  --secondary-foreground: var(--color-almost-black);
-  --muted: var(--color-cream-light);
-  --muted-foreground: var(--color-petrol);
-  --accent: var(--color-coral);
-  --accent-foreground: var(--color-cream-lightest);
+  --popover-foreground: #4a3428;
+  --primary: #d4654f;
+  --primary-foreground: #faf6f0;
+  --secondary: #8b9d83;
+  --secondary-foreground: #faf6f0;
+  --muted: #f2e8dc;
+  --muted-foreground: #6d5347;
+  --accent: #d9a679;
+  --accent-foreground: #4a3428;
   --destructive: #d4183d;
   --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+  --border: rgba(74, 52, 40, 0.15);
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;
@@ -144,26 +132,6 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  
-  /* Colores personalizados Memoria Viva */
-  --color-cream-lightest: #f6e5cf;
-  --color-cream-light: #e0c49f;
-  --color-sand: #d2a060;
-  --color-ochre: #b3782e;
-  --color-brown-dark: #683e07;
-  --color-maxilibro-bg: #f2e8dc;
-  --color-maxilibro-text: #4a3428;
-  --color-maxilibro-text-secondary: #6d5347;
-  --color-teal-light: #80a4a8;
-  --color-teal: #4e7378;
-  --color-teal-dark: #28555a;
-  --color-petrol: #163d41;
-  --color-almost-black: #0a1d1f;
-  --color-peach-light: #e9d1c2;
-  --color-salmon: #ddb198;
-  --color-coral: #e07a5f;
-  --color-terracotta: #ba4f33;
-  --color-brick-dark: #802c16;
 }
 
 @layer base {
@@ -186,23 +154,20 @@
 
   h1 {
     font-size: var(--text-2xl);
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
-    font-family: 'Fraunces', serif;
   }
 
   h2 {
     font-size: var(--text-xl);
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
-    font-family: 'Fraunces', serif;
   }
 
   h3 {
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
-    font-family: 'Fraunces', serif;
   }
 
   h4 {
@@ -219,18 +184,13 @@
 
   button {
     font-size: var(--text-base);
-    font-weight: 700;
+    font-weight: var(--font-weight-medium);
     line-height: 1.5;
-    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
   input {
     font-size: var(--text-base);
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
-  }
-  
-  p {
-    font-family: 'Commissioner', sans-serif;
   }
 }

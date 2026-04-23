@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { Calendar, Play, Loader2 } from "lucide-react";
 import { projectId, publicAnonKey } from "/utils/supabase/info";
-import svgPaths from "../../../imports/svg-ffn9u4s4vz";
+import svgPaths from "../../imports/svg-ffn9u4s4vz";
 
 interface Story {
   id: string;
@@ -14,11 +15,8 @@ interface Story {
   audio_url: string;
 }
 
-interface ChismesProps {
-  onBack: () => void;
-}
-
-export default function Chismes({ onBack }: ChismesProps) {
+export default function Chismes() {
+  const navigate = useNavigate();
   const [stories, setStories] = useState<Story[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
@@ -137,7 +135,7 @@ export default function Chismes({ onBack }: ChismesProps) {
         )}
 
         <motion.button
-          onClick={onBack}
+          onClick={() => navigate("/indice")}
           className="absolute left-8 bottom-12 flex items-center gap-2 text-[#8b9d83] hover:text-[#677a5f] transition-colors"
           whileHover={{ x: -5 }}
         >

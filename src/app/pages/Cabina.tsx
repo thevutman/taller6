@@ -1,16 +1,14 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { Mic, Square, Upload, CheckCircle, XCircle, Loader2 } from "lucide-react";
-import { projectId, publicAnonKey } from "/utils/supabase/info";
-import svgPaths from "../../../imports/svg-ffn9u4s4vz";
+import { projectId, publicAnonKey } from "../../../utils/supabase/info";
+import svgPaths from "../../imports/svg-ffn9u4s4vz"; 
 
 type RecordingState = "idle" | "recording" | "stopped" | "uploading" | "success" | "rejected";
 
-interface CabinaProps {
-  onBack: () => void;
-}
-
-export default function Cabina({ onBack }: CabinaProps) {
+export default function Cabina() {
+  const navigate = useNavigate();
   const [recordingState, setRecordingState] = useState<RecordingState>("idle");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
@@ -584,7 +582,7 @@ export default function Cabina({ onBack }: CabinaProps) {
         )}
 
         <motion.button
-          onClick={onBack}
+          onClick={() => navigate("/chismografo")}
           className="absolute left-8 bottom-12 flex items-center gap-2 text-[#8b9d83] hover:text-[#677a5f] transition-colors"
           whileHover={{ x: -5 }}
         >
