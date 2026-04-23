@@ -6,6 +6,7 @@ import imgFrame5 from "figma:asset/5011e51ef446d547c8edf6af523f2ba94ccbe971.png"
 import imgFrame7 from "figma:asset/3d917c6ae26f75a48b88a88f079126d00a2354ba.png";
 import imgFrame6 from "figma:asset/01a0cc64347219188cbf2427a541bf93e703b8b5.png";
 import imgFrame8 from "figma:asset/a84644243e844c20856abffa5e376e3f3ed4e17a.png";
+import BotonGesto from "../components/ui/BotonGesto";
 
 const menuItems = [
   {
@@ -85,51 +86,73 @@ export default function Indice() {
         {/* Primeras 3 opciones */}
         <div className="space-y-6 max-w-md mx-auto">
           {menuItems.slice(0, 3).map((item, index) => (
-            <motion.button
+            // <motion.button
+            //   key={item.number}
+            //   initial={{ x: -100, opacity: 0 }}
+            //   animate={{ x: 0, opacity: 1 }}
+            //   transition={{ delay: index * 0.1 }}
+            //   whileHover={{ 
+            //     scale: 1.02, 
+            //     x: 10,
+            //     transition: { duration: 0.2 } 
+            //   }}
+            //   whileTap={{ scale: 0.98 }}
+            //   onClick={() => navigate(item.route)}
+            //   className="group relative bg-[#fff1df] rounded-[20px] p-6 flex items-center gap-6 text-left shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full overflow-hidden"
+            //   style={{ "--item-color": item.color } as React.CSSProperties}
+            // >
+            //   {/* Icono */}
+            //   <div className="w-10 h-10 flex-shrink-0 relative group-hover:scale-110 transition-transform">
+            //     <img 
+            //       src={item.icon} 
+            //       alt="" 
+            //       className="absolute inset-0 w-full h-full object-contain"
+            //     />
+            //   </div>
+
+            //   {/* Contenido */}
+            //   <div className="flex-1 min-w-0">
+            //     <h2
+            //       className="font-['Fraunces',serif] font-semibold text-[20px] mb-1"
+            //       style={{ 
+            //         fontVariationSettings: "'SOFT' 0, 'WONK' 1",
+            //         color: item.color
+            //       }}
+            //     >
+            //       {item.title}
+            //     </h2>
+            //     {item.subtitle && (
+            //       <p
+            //         className="font-['Commissioner',sans-serif] font-medium text-[14px] text-[#683e07] leading-snug"
+            //         style={{ fontVariationSettings: "'FLAR' 0, 'VOLM' 0" }}
+            //       >
+            //         {item.subtitle}
+            //       </p>
+            //     )}
+            //   </div>
+            // </motion.button>
+            <BotonGesto 
               key={item.number}
-              initial={{ x: -100, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ 
-                scale: 1.02, 
-                x: 10,
-                transition: { duration: 0.2 } 
-              }}
-              whileTap={{ scale: 0.98 }}
               onClick={() => navigate(item.route)}
-              className="group relative bg-[#fff1df] rounded-[20px] p-6 flex items-center gap-6 text-left shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] w-full overflow-hidden"
-              style={{ "--item-color": item.color } as React.CSSProperties}
+              color={item.color}
             >
               {/* Icono */}
               <div className="w-10 h-10 flex-shrink-0 relative group-hover:scale-110 transition-transform">
-                <img 
-                  src={item.icon} 
-                  alt="" 
-                  className="absolute inset-0 w-full h-full object-contain"
-                />
+                <img src={item.icon} alt="" className="absolute inset-0 w-full h-full object-contain" />
               </div>
 
               {/* Contenido */}
               <div className="flex-1 min-w-0">
-                <h2
-                  className="font-['Fraunces',serif] font-semibold text-[20px] mb-1"
-                  style={{ 
-                    fontVariationSettings: "'SOFT' 0, 'WONK' 1",
-                    color: item.color
-                  }}
-                >
+                <h2 className="font-['Fraunces',serif] font-semibold text-[20px] mb-1" style={{ color: item.color }}>
                   {item.title}
                 </h2>
                 {item.subtitle && (
-                  <p
-                    className="font-['Commissioner',sans-serif] font-medium text-[14px] text-[#683e07] leading-snug"
-                    style={{ fontVariationSettings: "'FLAR' 0, 'VOLM' 0" }}
-                  >
+                  <p className="font-['Commissioner',sans-serif] font-medium text-[14px] text-[#683e07]">
                     {item.subtitle}
                   </p>
                 )}
               </div>
-            </motion.button>
+            </BotonGesto>
           ))}
         </div>
 
