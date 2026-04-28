@@ -4,6 +4,7 @@ import { HandLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 interface HandTrackingContextType {
   isReady: boolean;
   cursor: { x: number; y: number };
+  isPinching: boolean;
 }
 
 const HandTrackingContext = createContext<HandTrackingContextType | null>(null);
@@ -11,13 +12,13 @@ const HandTrackingContext = createContext<HandTrackingContextType | null>(null);
 export function HandTrackingProvider({ children }: { children: ReactNode }) {
   const [isReady, setIsReady] = useState(false);
   const [cursor, setCursor] = useState({ x: 0, y: 0 });
+  const [isPinching, setIsPinching] = useState(false); // Estado para saber si pellizca
+
   
   // Referencias para el loop de procesamiento
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
   const requestRef = useRef<number | null>(null);
-
-  // Coordenadas suavizadas para evitar saltos (Lerp)
   const smoothedCursor = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -65,7 +66,9 @@ export function HandTrackingProvider({ children }: { children: ReactNode }) {
           const results = handLandmarkerRef.current.detectForVideo(videoRef.current, startTimeMs);
 
           if (results.landmarks && results.landmarks.length > 0) {
-            const indexFinger = results.landmarks[0][8];
+            const hand = results.landmarks[0];
+            const indexFinger = hand[8]; // Punta del Índice
+            const thumbFinger = hand[4]; // Punta del Pulgar
 
             const targetX = (1 - indexFinger.x) * window.innerWidth;
             const targetY = indexFinger.y * window.innerHeight;
@@ -77,6 +80,18 @@ export function HandTrackingProvider({ children }: { children: ReactNode }) {
               x: smoothedCursor.current.x, 
               y: smoothedCursor.current.y 
             });
+
+            // Medimos la distancia matemática entre el pulgar y el índice
+            const distance = Math.sqrt(
+              Math.pow(indexFinger.x - thumbFinger.x, 2) + 
+              Math.pow(indexFinger.y - thumbFinger.y, 2)
+            );
+            
+            // Si la distancia es menor a 0.05, consideramos que están tocándose (pellizco)
+            setIsPinching(distance < 0.05);
+          }
+          else {
+            setIsPinching(false);
           }
         }
       }
@@ -96,22 +111,20 @@ export function HandTrackingProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <HandTrackingContext.Provider value={{ isReady, cursor }}>
+    <HandTrackingContext.Provider value={{ isReady, cursor, isPinching }}>
       {children}
       {/* Opcional: Un pequeño punto visual para que TÚ veas dónde está detectando */}
       {isReady && (
         <div 
           style={{
-            position: 'fixed',
-            left: cursor.x,
-            top: cursor.y,
-            width: '20px',
-            height: '20px',
-            background: 'red',
-            borderRadius: '50%',
-            pointerEvents: 'none',
-            zIndex: 9999,
-            transform: 'translate(-50%, -50%)'
+            position: 'fixed', left: cursor.x, top: cursor.y,
+            width: isPinching ? '15px' : '20px',
+            height: isPinching ? '15px' : '20px',
+            background: isPinching ? '#8b9d83' : '#d4654f', // Cambia de color al pellizcar
+            border: '2px solid white', borderRadius: '50%',
+            pointerEvents: 'none', zIndex: 9999,
+            transform: 'translate(-50%, -50%)',
+            transition: 'width 0.2s, height 0.2s, background 0.2s'
           }}
         />
       )}

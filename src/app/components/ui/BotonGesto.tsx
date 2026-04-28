@@ -47,7 +47,7 @@ export default function BotonGesto({ onClick, children, color }: BotonGestoProps
             onClick(); // ¡Ejecutamos la acción (ej. navegar a la página)!
             return 100;
           }
-          return prev + 2; 
+          return prev + 10; 
         });
       }, 100);
     } else {

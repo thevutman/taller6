@@ -1,9 +1,41 @@
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import imgFrame1 from "figma:asset/0ff69a7cf933d5a9835d6e9213694f5f9b55d2bf.png";
+import { useHandTracking } from "../context/HandTrackingContext";
+import { useEffect, useRef } from "react";
 
 export default function Portada() {
   const navigate = useNavigate();
+  const { cursor, isPinching } = useHandTracking();
+  
+  // Referencias para el gesto
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    // Lógica del gesto: "Pellizcar + Arrastrar a la Izquierda"
+    if (isPinching) {
+      if (!isDragging.current) {
+        // Acaba de hacer el pellizco: Guardamos dónde empezó
+        isDragging.current = true;
+        startX.current = cursor.x;
+      } else {
+        // Mantiene el pellizco presionado: Medimos cuánto lo ha movido
+        // Si startX (ej: 500) menos cursor.x (ej: 300) es positivo, se está moviendo a la izquierda
+        const dragDistance = startX.current - cursor.x;
+
+        // Si arrastró más de 120 píxeles hacia la izquierda
+        if (dragDistance > 120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/indice"); // Pasamos de página
+        }
+      }
+    } else {
+      // Si abre los dedos, cancelamos el arrastre
+      isDragging.current = false;
+    }
+  }, [cursor.x, isPinching, navigate]);
+
 
   return (
     <motion.div
