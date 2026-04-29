@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import imgFrame5 from "figma:asset/5011e51ef446d547c8edf6af523f2ba94ccbe971.png";
+import { useHandTracking } from "../context/HandTrackingContext";
+import { useEffect, useRef } from "react";
 
 const hierbas = [
   { nombre: "Yerbabuena", uso: "Digestión y calma" },
@@ -12,6 +14,39 @@ const hierbas = [
 
 export default function Capitulo3() {
   const navigate = useNavigate();
+  const { cursor, isPinching } = useHandTracking();
+  
+  // Referencias para el gesto
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    // Lógica del gesto: "Pellizcar + Arrastrar a la Izquierda"
+    if (isPinching) {
+      if (!isDragging.current) {
+        // Acaba de hacer el pellizco: Guardamos dónde empezó
+        isDragging.current = true;
+        startX.current = cursor.x;
+      } else {
+        // Mantiene el pellizco presionado: Medimos cuánto lo ha movido
+        // Si startX (ej: 500) menos cursor.x (ej: 300) es positivo, se está moviendo a la izquierda
+        const dragDistance = startX.current - cursor.x;
+
+        // Si arrastró más de 120 píxeles hacia la izquierda
+        if (dragDistance > 120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/mapa"); // Pasamos de página
+        }
+        if (dragDistance < -120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/capitulo-2"); // Pasamos de página
+        }
+      }
+    } else {
+      // Si abre los dedos, cancelamos el arrastre
+      isDragging.current = false;
+    }
+  }, [cursor.x, isPinching, navigate]);
 
   return (
     <motion.div

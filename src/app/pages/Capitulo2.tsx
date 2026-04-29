@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import imgFrame4 from "figma:asset/f2aa0910921eceacefaa05b4426f8f5c745d49ec.png";
+import { useHandTracking } from "../context/HandTrackingContext";
+import { useEffect, useRef } from "react";
 
 const recetas = [
   {
@@ -27,6 +29,39 @@ const recetas = [
 
 export default function Capitulo2() {
   const navigate = useNavigate();
+  const { cursor, isPinching } = useHandTracking();
+  
+  // Referencias para el gesto
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    // Lógica del gesto: "Pellizcar + Arrastrar a la Izquierda"
+    if (isPinching) {
+      if (!isDragging.current) {
+        // Acaba de hacer el pellizco: Guardamos dónde empezó
+        isDragging.current = true;
+        startX.current = cursor.x;
+      } else {
+        // Mantiene el pellizco presionado: Medimos cuánto lo ha movido
+        // Si startX (ej: 500) menos cursor.x (ej: 300) es positivo, se está moviendo a la izquierda
+        const dragDistance = startX.current - cursor.x;
+
+        // Si arrastró más de 120 píxeles hacia la izquierda
+        if (dragDistance > 120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/capitulo-3"); // Pasamos de página
+        }
+        if (dragDistance < -120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/capitulo-1"); // Pasamos de página
+        }
+      }
+    } else {
+      // Si abre los dedos, cancelamos el arrastre
+      isDragging.current = false;
+    }
+  }, [cursor.x, isPinching, navigate]);
 
   return (
     <motion.div

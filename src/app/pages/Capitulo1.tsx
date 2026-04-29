@@ -7,9 +7,45 @@ import imgImageWithFallback2 from "figma:asset/e395b2f386f5f9bf079a8b7420510257e
 import imgImageWithFallback3 from "figma:asset/f11564d4e691bc230a87ceb9c54e731ff2d2fdef.png";
 import imgImageWithFallback4 from "figma:asset/6a4c0be4fccbc1eb2840f564361721ea80123897.png";
 import imgImageWithFallback5 from "figma:asset/42c39fe09aeea04cd165f4520dc7554335f86107.png";
+import { useEffect, useRef } from "react";
+import { useHandTracking } from "../context/HandTrackingContext";
 
 export default function Capitulo1() {
   const navigate = useNavigate();
+  const { cursor, isPinching } = useHandTracking();
+  
+  // Referencias para el gesto
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    // Lógica del gesto: "Pellizcar + Arrastrar a la Izquierda"
+    if (isPinching) {
+      if (!isDragging.current) {
+        // Acaba de hacer el pellizco: Guardamos dónde empezó
+        isDragging.current = true;
+        startX.current = cursor.x;
+      } else {
+        // Mantiene el pellizco presionado: Medimos cuánto lo ha movido
+        // Si startX (ej: 500) menos cursor.x (ej: 300) es positivo, se está moviendo a la izquierda
+        const dragDistance = startX.current - cursor.x;
+
+        // Si arrastró más de 120 píxeles hacia la izquierda
+        if (dragDistance > 120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/capitulo-2"); // Pasamos de página
+        }
+
+        if (dragDistance < -120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/indice"); // Pasamos de página
+        }
+      }
+    } else {
+      // Si abre los dedos, cancelamos el arrastre
+      isDragging.current = false;
+    }
+  }, [cursor.x, isPinching, navigate]);
 
   return (
     <motion.div

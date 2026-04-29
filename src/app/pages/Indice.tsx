@@ -7,6 +7,8 @@ import imgFrame7 from "figma:asset/3d917c6ae26f75a48b88a88f079126d00a2354ba.png"
 import imgFrame6 from "figma:asset/01a0cc64347219188cbf2427a541bf93e703b8b5.png";
 import imgFrame8 from "figma:asset/a84644243e844c20856abffa5e376e3f3ed4e17a.png";
 import BotonGesto from "../components/ui/BotonGesto";
+import { useHandTracking } from "../context/HandTrackingContext";
+import { useEffect, useRef } from "react";
 
 const menuItems = [
   {
@@ -62,6 +64,34 @@ const menuItems = [
 
 export default function Indice() {
   const navigate = useNavigate();
+  const { cursor, isPinching } = useHandTracking();
+  
+  // Referencias para el gesto
+  const startX = useRef(0);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    // Lógica del gesto: "Pellizcar + Arrastrar a la Izquierda"
+    if (isPinching) {
+      if (!isDragging.current) {
+        // Acaba de hacer el pellizco: Guardamos dónde empezó
+        isDragging.current = true;
+        startX.current = cursor.x;
+      } else {
+        // Mantiene el pellizco presionado: Medimos cuánto lo ha movido
+        // Si startX (ej: 500) menos cursor.x (ej: 300) es positivo, se está moviendo a la izquierda
+        const dragDistance = startX.current - cursor.x;
+
+        if (dragDistance < -120) {
+          isDragging.current = false; // Soltamos el gesto
+          navigate("/"); // Pasamos de página
+        }
+      }
+    } else {
+      // Si abre los dedos, cancelamos el arrastre
+      isDragging.current = false;
+    }
+  }, [cursor.x, isPinching, navigate]);
 
   return (
     <motion.div

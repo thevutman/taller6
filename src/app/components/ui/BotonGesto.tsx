@@ -47,7 +47,7 @@ export default function BotonGesto({ onClick, children, color }: BotonGestoProps
             onClick(); // ¡Ejecutamos la acción (ej. navegar a la página)!
             return 100;
           }
-          return prev + 10; 
+          return prev + 8; 
         });
       }, 100);
     } else {
@@ -56,7 +56,7 @@ export default function BotonGesto({ onClick, children, color }: BotonGestoProps
     }
 
     return () => clearInterval(intervalo);
-  }, [isHovered, onClick]);
+  }, [isHovered]);
 
   return (
     <motion.button
