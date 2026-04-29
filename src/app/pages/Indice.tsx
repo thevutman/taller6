@@ -9,6 +9,7 @@ import imgFrame8 from "figma:asset/a84644243e844c20856abffa5e376e3f3ed4e17a.png"
 import BotonGesto from "../components/ui/BotonGesto";
 import { useHandTracking } from "../context/HandTrackingContext";
 import { useEffect, useRef } from "react";
+import { PlantaDibujada, FlorDibujada, EstrellaDibujada, MarcoPaginaDibujado, LineaOnduladaDibujada } from "../components/ElementosDibujados";
 
 const menuItems = [
   {
@@ -100,17 +101,37 @@ export default function Indice() {
       className="bg-[#f6e5cf] relative w-full h-full flex"
     >
       {/* Página izquierda */}
-      <div className="w-1/2 relative overflow-hidden p-12">
+      <MarcoPaginaDibujado className="w-1/2 relative overflow-hidden p-12">
+        {/* Decoraciones florales en el header */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="absolute top-8 left-1/3"
+        >
+          <FlorDibujada color="#3e0c56" />
+        </motion.div>
+
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="absolute top-8 right-1/3"
+        >
+          <EstrellaDibujada color="#e07a5f" />
+        </motion.div>
+
         {/* Header */}
-        <div className="mb-10 flex justify-center">
+        <div className="mb-10 flex flex-col items-center">
           <motion.h1
             initial={{ x: -50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="font-['Fraunces',serif] font-bold text-[32px] text-[#683e07]"
+            className="font-['Fraunces',serif] font-bold text-[36px] text-[#3e0c56] mb-3"
             style={{ fontVariationSettings: "'SOFT' 0, 'WONK' 1" }}
           >
             Elige Tu Historia
           </motion.h1>
+          <LineaOnduladaDibujada className="w-64" color="#3e0c56" />
         </div>
 
         {/* Primeras 3 opciones */}
@@ -141,21 +162,31 @@ export default function Indice() {
           ))}
         </div>
 
+        {/* Planta decorativa inferior */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.8 }}
+          className="absolute bottom-16 left-8"
+        >
+          <PlantaDibujada className="w-16 h-20" color="#123f34" />
+        </motion.div>
+
         {/* Botón volver */}
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
           onClick={() => navigate("/")}
-          className="absolute bottom-8 left-8 font-['Commissioner',sans-serif] font-medium text-[14px] text-[#683e07] hover:text-[#b3782e] transition-colors flex items-center gap-2"
+          className="absolute bottom-8 left-24 font-['Commissioner',sans-serif] font-medium text-[14px] text-[#3e0c56] hover:text-[#e07a5f] transition-colors flex items-center gap-2"
           style={{ fontVariationSettings: "'FLAR' 0, 'VOLM' 0" }}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
           Volver a la portada
         </motion.button>
-      </div>
+      </MarcoPaginaDibujado>
 
       {/* Sombra del lomo del libro */}
       <div className="absolute left-1/2 top-0 bottom-0 w-12 -translate-x-1/2 z-10 pointer-events-none">
@@ -163,10 +194,20 @@ export default function Indice() {
       </div>
 
       {/* Página derecha */}
-      <div className="w-1/2 relative overflow-hidden p-12 pt-[116px]">
+      <MarcoPaginaDibujado className="w-1/2 relative overflow-hidden p-12 pt-[116px]">
+        {/* Decoraciones florales */}
+        <motion.div
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="absolute top-20 right-1/3"
+        >
+          <FlorDibujada color="#e07a5f" />
+        </motion.div>
+
         {/* Últimas 2 opciones */}
         <div className="space-y-6 max-w-md mx-auto">
-          {menuItems.slice(3, 6).map((item, index) => (
+          {menuItems.slice(3, 5).map((item, index) => (
             <BotonGesto 
               key={item.number}
               onClick={() => navigate(item.route)}
@@ -191,7 +232,17 @@ export default function Indice() {
             </BotonGesto>
           ))}
         </div>
-      </div>
+
+        {/* Planta decorativa inferior derecha */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="absolute bottom-16 right-8"
+        >
+          <PlantaDibujada className="w-16 h-20" color="#e07a5f" />
+        </motion.div>
+      </MarcoPaginaDibujado>
     </motion.div>
   );
 }
